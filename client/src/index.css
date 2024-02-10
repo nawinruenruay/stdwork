@@ -1,0 +1,43 @@
+* {
+  font-family: "Sarabun", sans-serif !important;
+}
+
+th {
+  font-weight: bold !important;
+  text-align: center !important;
+}
+
+td {
+  text-align: center !important;
+}
+
+/* START NAVLINK */
+.NavLink {
+  transition: all 0.4s ease !important;
+  background-position: center !important;
+  transition: background 0.3s !important;
+}
+.NavLink:hover {
+  color: #3366ff !important;
+  background: #e3f2fd
+    radial-gradient(circle, transparent 1%, rgba(51, 102, 255, 0.08) 1%)
+    center/15000% !important;
+}
+.NavLink.active {
+  background: #e3f2fd
+    radial-gradient(circle, transparent 1%, rgba(51, 102, 255, 0.08) 1%)
+    center/15000% !important;
+}
+/* END NAVLINK */
+
+/* START NAVLOGO */
+.NavLogo {
+  font-weight: bold;
+  font-size: 17px;
+}
+.NavLogo img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+/* END NAVLOGO */
