@@ -16,7 +16,6 @@ import {
   IconCategory,
   IconPlus,
 } from "@tabler/icons-react";
-// import { MantineLogo } from "@mantinex/mantine-logo";
 
 function Layout() {
   const [Active, setActive] = useState(0);
@@ -28,12 +27,6 @@ function Layout() {
       title: "นักศึกษา",
       path: "/student",
       icon: <IconUser />,
-      sub: [
-        {
-          title: "เพิ่มข้อมูลนักศึกษา",
-          icon: <IconPlus />,
-        },
-      ],
     },
     {
       title: "ผลงาน",
@@ -46,6 +39,7 @@ function Layout() {
       icon: <IconCategory />,
     },
   ];
+
   useEffect(() => {
     const index = data.findIndex(
       (val) => val.path === window.location.pathname
@@ -53,6 +47,12 @@ function Layout() {
     console.log(index);
     setActive(index);
   }, []);
+
+  const HandleNavClick = (key) => {
+    setActive(key);
+    toggleMobile();
+  };
+
   return (
     <AppShell
       header={{ height: 65 }}
@@ -69,11 +69,12 @@ function Layout() {
           background: "#3366FF",
           color: "#FFF",
         }}
+        className="Header"
       >
         <Group h="100%" px="sm" justify="space-between" w={280}>
           <Flex className="NavLogo" align="center" gap={10} ml={10}>
             <img src="/src/assets/NavLogo.jpg" />
-            qwertyuiopasdfghjklz
+            kuyไร
           </Flex>
           <Burger
             opened={mobileOpened}
@@ -91,7 +92,7 @@ function Layout() {
           />
         </Group>
       </AppShell.Header>
-      <AppShell.Navbar p="md" style={{ borderRight: "0" }}>
+      <AppShell.Navbar p="md" style={{ borderRight: "0" }} className="Navbar">
         <Flex direction={"column"} align={"center"}>
           {data.map((i, key) => (
             <NavLink
@@ -102,11 +103,8 @@ function Layout() {
                 fontWeight: "bold",
                 marginBottom: "5px",
               }}
-              className="NavLink"
-              onClick={() => {
-                // toggle();
-                setActive(key);
-              }}
+              className="NavLink ripple"
+              onClick={() => HandleNavClick(key)}
               active={key === Active}
               component={Nl}
               to={i.path}

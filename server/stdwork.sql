@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 09, 2024 at 12:35 PM
+-- Generation Time: Feb 11, 2024 at 06:28 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -121,16 +121,17 @@ CREATE TABLE `tbl_work` (
 --
 
 INSERT INTO `tbl_work` (`wid`, `wtid`, `wname`, `stdid`) VALUES
-(1, 1, '', '621320901'),
-(2, 1, '', '621320901'),
-(3, 1, '', '621320901'),
-(4, 1, '', '621320901'),
-(5, 1, '', '621320902'),
-(6, 4, '', '621320903'),
-(9, 2, '', '621320901'),
-(10, 11, '', '621320901'),
-(11, 11, '', '621320901'),
-(12, 11, '', '621320910');
+(1, 1, 'imissher', '641320708'),
+(2, 1, 'imissher', '641320708'),
+(5, 11, '', '641320708'),
+(6, 3, '', '641320708'),
+(7, 2, '', '641320708'),
+(8, 2, '', '641320701'),
+(11, 6, '', '621320902'),
+(13, 1, '', '621320903'),
+(14, 1, 'imissher', '641320708'),
+(15, 11, '', '621320901'),
+(16, 1, '', '621320902');
 
 -- --------------------------------------------------------
 
@@ -139,10 +140,9 @@ INSERT INTO `tbl_work` (`wid`, `wtid`, `wname`, `stdid`) VALUES
 --
 
 CREATE TABLE `tbl_works` (
-  `id` int(11) NOT NULL,
   `wid` int(11) NOT NULL,
   `stdid` char(9) NOT NULL,
-  `typework` varchar(10) NOT NULL,
+  `typework` varchar(3) NOT NULL,
   `pathwork` varchar(50) NOT NULL,
   `statuswork` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -151,19 +151,18 @@ CREATE TABLE `tbl_works` (
 -- Dumping data for table `tbl_works`
 --
 
-INSERT INTO `tbl_works` (`id`, `wid`, `stdid`, `typework`, `pathwork`, `statuswork`) VALUES
-(1, 1, '621320901', 'PIC', 'c5252c8c-0f8c-4d89-ba95-90ab8bd01a99.jpg', 0),
-(2, 2, '621320901', 'PIC', '4bdf79a4-ba89-4800-a788-f809f78ecfb1.jpg', 0),
-(3, 3, '621320901', 'PIC', '1c200d3d-6bd1-41ab-8b54-ed0bde2243a9.jpg', 0),
-(4, 4, '621320901', 'PIC', 'd0068e7b-bf13-45d2-8fa9-5875c2a6a77c.jpg', 0),
-(5, 5, '621320902', 'PIC', '79ae30e1-2e02-491f-b744-7cd6335603b8.jpg', 0),
-(6, 6, '621320903', 'VDO', 'c5177f78-ebd4-4576-b9f0-01ffce453312.mp4', 0),
-(7, 7, '621320901', 'PIC', '6394e041-4987-49a7-b96b-0eae6936ec4c.jpg', 0),
-(8, 8, '621320901', 'PIC', 'c8287b5f-3642-4dd4-a87c-cf625bf706a8.jpg', 0),
-(9, 9, '621320901', 'PDF', '40584e6b-206b-4261-b26e-f2ad0e58178d.pdf', 0),
-(10, 10, '621320901', 'PIC', '193a5cd6-b4fe-4989-81de-34cbfe8312f8.png', 0),
-(11, 11, '621320901', 'PIC', '2caf6fe4-f3c1-4e2c-8d0e-c6c788780b5b.jpg', 0),
-(12, 12, '621320910', 'PIC', '023e9176-19b2-47d1-bee3-0ebd3b548472.jpg', 0);
+INSERT INTO `tbl_works` (`wid`, `stdid`, `typework`, `pathwork`, `statuswork`) VALUES
+(1, '641320708', 'PIC', '1615131c-b6a1-4fa1-8b08-21662f9a1ff6.jpg', 0),
+(2, '641320708', 'PIC', '935cec62-c932-472c-8a97-2b6b7ee16c33.jpg', 0),
+(5, '641320708', 'VDO', '93610099-34ad-4cd9-be59-84bed650d535.mp4', 0),
+(6, '641320708', 'PIC', '6bbb7065-df78-4971-bbd3-49532b6a8050.jpg', 0),
+(7, '641320708', 'PDF', '2b3b7de2-8c8d-4478-acae-e0f171c6fa75.pdf', 0),
+(8, '641320701', 'PDF', '5ca8d03c-85bf-4c91-9e7f-4b5f8f1fe501.pdf', 0),
+(11, '621320902', 'PIC', '88140694-6da3-4756-a137-474158e1d13a.jpg', 0),
+(13, '621320903', 'PIC', '71dc6f3a-9e8e-4208-8ea1-826359de620f.jpg', 0),
+(14, '641320708', 'PIC', 'd0aefa26-e6f0-4dd3-b396-b9752fb8f297.jpg', 0),
+(15, '621320901', 'VDO', 'cd581108-5f5d-49a5-afa6-25d8044a5347.mp4', 0),
+(16, '621320902', 'PIC', '74b5b36a-c520-473b-b45d-16437023876d.jpg', 0);
 
 -- --------------------------------------------------------
 
@@ -219,7 +218,7 @@ ALTER TABLE `tbl_work`
 -- Indexes for table `tbl_works`
 --
 ALTER TABLE `tbl_works`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`wid`);
 
 --
 -- Indexes for table `tbl_worktype`

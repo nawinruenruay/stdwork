@@ -198,6 +198,7 @@ function Wortype() {
           padding: "20px",
           borderRadius: "10px",
         }}
+        className="Main-Content"
       >
         <MDBDataTable
           bordered
@@ -205,11 +206,11 @@ function Wortype() {
           data={Table}
           noBottomColumns
           small
-          noRecordsFoundLabel="ไม่พบข้อมูล"
+          noRecordsFoundLabel="ไม่พบรายการ"
           searchLabel="ค้นหา"
-          // theadColor="black"
-          // theadTextWhite
-          // striped
+          infoLabel={["กำลังแสดง", "ถึง", "ของ", "รายการ"]}
+          entriesLabel="แสดงรายการ"
+          paginationLabel={["ก่อนหน้า", "ถัดไป"]}
           disableRetreatAfterSorting
         />
       </div>

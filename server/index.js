@@ -36,28 +36,23 @@ app.post("/workadd", upload.single("file"), (req, res) => {
 
   db.beginTransaction(() => {
     const maxWid = "SELECT MAX(wid) + 1 AS maxwid FROM tbl_work";
-    const maxId = "SELECT MAX(id) + 1 AS maxid FROM tbl_works";
 
     db.query(maxWid, (err, result) => {
       const wid = result[0].maxwid || 1;
 
-      db.query(maxId, (err, result) => {
-        const id = result[0].maxid || 1;
-
-        const insertTblWork =
-          "INSERT INTO tbl_work (wid, wtid, wname, stdid) VALUES (?,?,?,?)";
-        db.query(insertTblWork, [wid, wtid, wname, stdid], () => {
-          const insertTblWorks =
-            "INSERT INTO tbl_works (id, wid ,stdid, typework, pathwork) VALUES (?,?,?,?,?)";
-          db.query(insertTblWorks, [id, wid, stdid, typework, file], () => {
-            db.commit((err) => {
-              if (err) {
-                return db.rollback(() =>
-                  res.status(500).json({ error: "Server Error" })
-                );
-              }
-              return res.json({ message: "เพิ่มข้อมูลผลงานสำเร็จ" });
-            });
+      const insertTblWork =
+        "INSERT INTO tbl_work (wid, wtid, wname, stdid) VALUES (?,?,?,?)";
+      db.query(insertTblWork, [wid, wtid, wname, stdid], () => {
+        const insertTblWorks =
+          "INSERT INTO tbl_works (wid ,stdid, typework, pathwork) VALUES (?,?,?,?)";
+        db.query(insertTblWorks, [wid, stdid, typework, file], () => {
+          db.commit((err) => {
+            if (err) {
+              return db.rollback(() =>
+                res.status(500).json({ error: "Server Error" })
+              );
+            }
+            return res.json({ message: "เพิ่มข้อมูลผลงานสำเร็จ" });
           });
         });
       });
@@ -70,10 +65,41 @@ app.post("/workstd", (req, res) => {
   const typework = req.body.typework;
   const wtid = req.body.wtid;
   let sql =
-    "SELECT tbl_work.*, typework, tbl_works.stdid , wname , pathwork, wtid FROM tbl_work LEFT JOIN tbl_works on tbl_work.wid = tbl_works.wid where tbl_works.stdid = ? AND tbl_works.typework = ? AND tbl_work.wtid = ?  ";
+    "SELECT tbl_work.*, typework, tbl_works.stdid , wname , pathwork, wtid FROM tbl_work" +
+    "LEFT JOIN tbl_works on tbl_work.wid = tbl_works.wid where tbl_works.stdid = ? AND tbl_works.typework = ? AND tbl_work.wtid = ?  ";
   // let sql = "SELECT * FROM tbl_works WHERE stdid = ?";
   db.query(sql, [stdid, typework, wtid], (err, result) => {
     return res.json(result);
+  });
+});
+
+app.post("/workedit", (req, res) => {
+  const { wname, stdid, typework, wtid } = req.body;
+  const sql =
+    "UPDATE tbl_work " +
+    "INNER JOIN tbl_works ON tbl_work.wid = tbl_works.wid " +
+    "SET tbl_work.wname = ? " +
+    "WHERE tbl_work.stdid = ? AND tbl_works.typework = ? AND tbl_work.wtid = ?";
+  db.query(sql, [wname, stdid, typework, wtid], (err, result) => {
+    if (err) {
+      console.error("Error updating work:", err);
+      return res.status(500).json({ error: "Server Error" });
+    }
+    return res.json({ message: "อัปเดตข้อมูลผลงานสำเร็จ" });
+  });
+});
+
+app.get("/work/:stdid/:typework/:wtid", (req, res) => {
+  const stdid = req.params.stdid;
+  const typework = req.params.typework;
+  const wtid = req.params.wtid;
+  let sql =
+    "SELECT tbl_work.*, typework, tbl_works.stdid , wname , pathwork, tbl_work.wtid , wtname FROM tbl_work  LEFT JOIN tbl_worktype ON tbl_work.wtid = tbl_worktype.wtid LEFT JOIN tbl_works on tbl_work.wid = tbl_works.wid  where tbl_works.stdid = ? AND tbl_works.typework = ? AND tbl_work.wtid = ?  ";
+  db.query(sql, [stdid, typework, wtid], (err, data) => {
+    if (err) {
+      return res.status(500).json({ error: "Server Error" });
+    }
+    return res.json(data);
   });
 });
 

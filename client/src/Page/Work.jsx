@@ -99,6 +99,7 @@ function Work() {
                   {i.typework === "PDF" ? (
                     <>
                       <ActionIcon
+                        color="green"
                         onClick={() => {
                           setViewPDF(true);
                           setSelectPDF(
@@ -117,6 +118,7 @@ function Work() {
                   ) : i.typework === "VDO" ? (
                     <>
                       <ActionIcon
+                        color="green"
                         onClick={() => {
                           setViewVDO(true);
                           setSelectVDO(
@@ -135,6 +137,7 @@ function Work() {
                   ) : (
                     <>
                       <ActionIcon
+                        color="green"
                         onClick={() => {
                           setViewIMG(true);
                           setSelectIMG(
@@ -158,7 +161,9 @@ function Work() {
                   <Flex gap="xs" justify="center" align="center">
                     <ActionIcon
                       onClick={() => {
-                        edit(i.stdid, i.typework, i.wtid);
+                        getWorkEdit(i.stdid, i.typework, i.wtid);
+                        setModalEdit(true);
+                        // edit(i.stdid, i.typework, i.wtid);
                       }}
                     >
                       <IconEdit />
@@ -197,6 +202,58 @@ function Work() {
     axios.get("http://localhost:9999/worktypelist").then((res) => {
       setWt(res.data);
     });
+  };
+
+  const getWorkEdit = (stdid, typework, wtid) => {
+    axios
+      .get(`http://localhost:9999/work/${stdid}/${typework}/${wtid}`)
+      .then((res) => {
+        console.log(res.data);
+        setStdid(res.data[0].stdid);
+        setWtid(res.data[0].wtid);
+        setTw(res.data[0].typework);
+        setWname(res.data[0].wname);
+      })
+      .catch((error) => {
+        console.error("Error fetching work data:", error);
+      });
+  };
+
+  const handleEditWork = () => {
+    console.log("stdid:", Stdid);
+    console.log("typework:", Tw);
+    console.log("wtid:", Wtid);
+    console.log("wname:", Wname);
+    // if (!Student.stdid || !Student.stdname) {
+    //   Swal.fire({
+    //     icon: "error",
+    //     title: "กรุณากรอกข้อมูลให้ครบ",
+    //     text: "ชื่อ-นามสกุล",
+    //   });
+    //   return;
+    // }
+    try {
+      axios.post("http://localhost:9999/workedit", {
+        wname: Wname,
+        stdid: Stdid,
+        typework: Tw,
+        wtid: Wtid,
+      });
+      Swal.fire({
+        icon: "success",
+        title: "แก้ไขข้อมูลสำเร็จ",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      setModalEdit(false);
+      Fetch();
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "เกิดข้อผิดพลาด",
+        text: "ไม่สามารถแก้ไขข้อมูลได้",
+      });
+    }
   };
 
   const handleAddWork = async () => {
@@ -249,17 +306,17 @@ function Work() {
     }
   };
 
-  const edit = (stdid, typework, wtid) => {
-    axios
-      .post("http://localhost:9999/workstd/", {
-        stdid: stdid,
-        typework: typework,
-        wtid: wtid,
-      })
-      .then((res) => {
-        console.log(res.data);
-      });
-  };
+  // const edit = (stdid, typework, wtid) => {
+  //   axios
+  //     .post("http://localhost:9999/workstd/", {
+  //       stdid: stdid,
+  //       typework: typework,
+  //       wtid: wtid,
+  //     })
+  //     .then((res) => {
+  //       console.log(res.data);
+  //     });
+  // };
 
   const handleDelete = (wid) => {
     Swal.fire({
@@ -411,6 +468,7 @@ function Work() {
             padding: "20px",
             borderRadius: "10px",
           }}
+          className="Main-Content"
         >
           <MDBDataTable
             bordered
@@ -418,11 +476,11 @@ function Work() {
             data={Table}
             noBottomColumns
             small
-            noRecordsFoundLabel="ไม่พบข้อมูล"
+            noRecordsFoundLabel="ไม่พบรายการ"
             searchLabel="ค้นหา"
-            // theadColor="white"
-            // theadTextWhite
-            // striped
+            infoLabel={["กำลังแสดง", "ถึง", "ของ", "รายการ"]}
+            entriesLabel="แสดงรายการ"
+            paginationLabel={["ก่อนหน้า", "ถัดไป"]}
             disableRetreatAfterSorting
           />
         </div>
@@ -526,6 +584,57 @@ function Work() {
           )} */}
           <Button fullWidth mt="md" color="#3366FF" onClick={handleAddWork}>
             บันทึกข้อมูล
+          </Button>
+        </Modal>
+
+        {/* แก้ไขข้อมูล */}
+        <Modal
+          opened={ModalEdit}
+          onClose={() => {
+            setModalEdit(false);
+          }}
+          title="แก้ไขข้อมูลผลงาน"
+          centered
+        >
+          <Select
+            label="ชื่อประเภทผลงาน"
+            placeholder="เลือกชื่อประเภทผลงาน"
+            data={Wt.map((Wt) => Wt.wtname)}
+            clearable
+            name="wtid"
+            checkIconPosition="right"
+            searchable
+            value={Wt.find((item) => item.wtid === Wtid)?.wtname || ""}
+            withAsterisk
+            onChange={(value) => {
+              const select = Wt.find((item) => item.wtname === value);
+              if (select) {
+                setWtid(select.wtid);
+              }
+            }}
+          />
+          <Select
+            label="ผลงานประเภท"
+            placeholder="ผลงานประเภทไหน ? VDO , PIC , PDF"
+            data={["VDO", "PIC", "PDF"]}
+            clearable
+            name="typework"
+            checkIconPosition="right"
+            searchable
+            value={Tw}
+            withAsterisk
+            onChange={(value) => setTw(value)}
+          />
+          <TextInput
+            placeholder="กรอกชื่อผลงาน"
+            label="ชื่อผลงาน"
+            name="Wname"
+            value={Wname}
+            onChange={(event) => setWname(event.target.value)}
+            withAsterisk
+          />
+          <Button fullWidth mt="md" color="#3366FF" onClick={handleEditWork}>
+            แก้ไขข้อมูล
           </Button>
         </Modal>
       </div>
